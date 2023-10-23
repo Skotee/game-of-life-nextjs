@@ -11,22 +11,16 @@ const Chat: React.FC = () => {
 	const [message, setMessage] = useState("");
 	const [messages, setMessages] = useState<Message[]>([]);
 
-	async function handleSendMessage() {
-		const userMessage = "Hello, AI!";
-		const response = await fetch("http://localhost:3000/pages/api/chat", {
+	async function sendMessage(message: string) {
+		const response = await fetch("../api/chat.ts", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ userMessage }),
+			body: JSON.stringify({ message }),
 		});
-		return response;
-	}
 
-	function sendMessage(message: string) {
-		const userMessage = "Hello, AI!";
-
-		const data = response.json();
+		const data = await response.json();
 		console.log("AI response:", data);
 		setMessages([
 			...messages,
@@ -34,7 +28,6 @@ const Chat: React.FC = () => {
 			{ content: data.response, isUser: false },
 		]);
 		setMessage("");
-		// `data.response` contains the generated GPT model response.
 	}
 
 	// Handler for input changes
@@ -50,6 +43,10 @@ const Chat: React.FC = () => {
 		if (message.trim()) {
 			sendMessage(message);
 		}
+	};
+
+	const clearMessages = () => {
+		setMessages([]);
 	};
 
 	return (
